@@ -106,18 +106,18 @@
 ---
 
 ## 폴더 구조
-📦WHYLOG
-┣ 📂.github  # 깃허브 이슈, PR 템플릿 폴더
-┣ 📂.vscode
-┃ ┗ 📜settings.json
-┣ 📂.node_modules  # 모듈 관련 폴더
-┣ 📂prisma
-┃ ┗ 📜schema.prisma
-┣ 📂src
-┃ ┣ 📜db.config.js
-┃ ┗ 📜index.js
-┣ 📜.env
-┣ 📜.gitignore
-┣ 📜package-lock.json
-┣ 📜package.json
+📦WHYLOG<br/>
+┣ 📂.github  # 깃허브 이슈, PR 템플릿 폴더<br/>
+┣ 📂.vscode<br/>
+┃ ┗ 📜settings.json<br/>
+┣ 📂.node_modules  # 모듈 관련 폴더<br/>
+┣ 📂prisma<br/>
+┃ ┗ 📜schema.prisma<br/>
+┣ 📂src<br/>
+┃ ┣ 📜db.config.js<br/>
+┃ ┗ 📜index.js<br/>
+┣ 📜.env<br/>
+┣ 📜.gitignore<br/>
+┣ 📜package-lock.json<br/>
+┣ 📜package.json<br/>
 ┗ 📜prisma.config.ts
