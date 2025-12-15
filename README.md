@@ -5,18 +5,18 @@
 ## 🔨 Tech Stack (Node.js Server)
 
 ### Languages
-- <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"/>**JavaScript (ES6+)**
+- <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"/> **JavaScript (ES6+)**
 
 ### Frameworks & Libraries
-- <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white"/>**Node.js**
-- <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/>**Express.js**
+- <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white"/> **Node.js**
+- <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white"/> **Express.js**
 - **JWT**
 - **Prisma**
 - **Swagger**
 - **dotenv**
 
 ### Database
-- <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>**MySQL**
+- <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> **MySQL**
 
 ### Tools
 - **npm**
@@ -25,8 +25,8 @@
 - **Nodemon**
 
 ### Version Control
-- <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white"/>**Git**
-- <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/>**GitHub**
+- <img src="https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white"/> **Git**
+- <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/> **GitHub**
 
 ---
 
