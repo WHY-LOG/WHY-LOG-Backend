@@ -15,13 +15,12 @@ datasource db {
 
 model User {
   id              Int      @id @default(autoincrement())
-  email           String   @unique @db.VarChar(255)
   name            String   @db.VarChar(20)
-  userReferenceId String   @unique @default(uuid())
-  platform String @db.VarChar(10)
-  refreshToken   String? @db.VarChar(500)
+  email           String   @unique @db.VarChar(255)
+  img_url String? @db.VarChar(200)
 
   records Record[]
+  reports   Report[]
 }
 
 model Categories {
@@ -37,7 +36,7 @@ model Record {
   userId Int @map("user_id")
   title String
   content String
-  occur_date Int @db.TinyInt
+  occur_date  DateTime
   updated_at DateTime
 
   user User @relation(fields: [userId], references: [id])
@@ -48,12 +47,15 @@ model Record {
 
 model Report {
   id Int @id @default(autoincrement())
-  
+  userId    Int     @map("user_id")
   standard String @db.VarChar(200)
   content String @db.VarChar(200)
   year Int 
 
+  user User @relation(fields: [userId], references: [id])
   report_categories Report_categories[]
+
+  @@index([userId])
 }
 
 model Record_categories {
