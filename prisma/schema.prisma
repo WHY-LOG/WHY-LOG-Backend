@@ -18,6 +18,7 @@ model User {
   email           String   @unique @db.VarChar(255)
   name            String   @db.VarChar(20)
   userReferenceId String   @unique @default(uuid())
+  platform String @db.VarChar(10)
   refreshToken   String? @db.VarChar(500)
 
   records Record[]
