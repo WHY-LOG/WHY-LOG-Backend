@@ -51,6 +51,7 @@ model Report {
   
   standard String @db.VarChar(200)
   content String @db.VarChar(200)
+  year Int 
 
   report_categories Report_categories[]
 }
