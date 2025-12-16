@@ -114,10 +114,10 @@
 ┣ 📂prisma<br/>
 ┃ ┗ 📜schema.prisma<br/>
 ┣ 📂src<br/>
-┃ ┣ 📂controllers
-┃ ┣ 📂dtos
-┃ ┣ 📂repositories
-┃ ┣ 📂services
+┃ ┣ 📂controllers<br/>
+┃ ┣ 📂dtos<br/>
+┃ ┣ 📂repositories<br/>
+┃ ┣ 📂services<br/>
 ┃ ┣ 📜db.config.js<br/>
 ┃ ┗ 📜index.js<br/>
 ┣ 📜.env<br/>
