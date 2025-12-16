@@ -17,7 +17,7 @@ model User {
   id              Int      @id @default(autoincrement())
   name            String   @db.VarChar(20)
   email           String   @unique @db.VarChar(255)
-  img_url String? @db.VarChar(200)
+  imgUrl String? @db.VarChar(200) @map("img_url")
 
   records Record[]
   reports   Report[]
@@ -25,10 +25,10 @@ model User {
 
 model Categories {
   id Int @id
-  category_name String @unique @db.VarChar(10)
+  categoryName String @unique @db.VarChar(10) @map("category_name")
 
-  record_categories Record_categories[]
-  report_categories Report_categories[]
+  recordCategories RecordCategories[]
+  reportCategories ReportCategories[]
 }
 
 model Record {
@@ -36,29 +36,29 @@ model Record {
   userId Int @map("user_id")
   title String
   content String
-  occur_date  DateTime
-  updated_at DateTime
+  occurDate  DateTime @map("occur_date")
+  updatedAt DateTime @map("updated_at") @default(now())
 
   user User @relation(fields: [userId], references: [id])
   @@index([userId], map: "user_id")
 
-  record_categories Record_categories[]
+  recordCategories RecordCategories[]
 }
 
 model Report {
   id Int @id @default(autoincrement())
   userId    Int     @map("user_id")
   standard String @db.VarChar(200)
-  content String @db.VarChar(200)
+  content String
   year Int 
 
   user User @relation(fields: [userId], references: [id])
-  report_categories Report_categories[]
+  repordCategories ReportCategories[]
 
   @@index([userId])
 }
 
-model Record_categories {
+model RecordCategories {
   id Int @id @default(autoincrement())
   recordId Int @map("record_id")
   categoryId Int @map("category_id")
@@ -69,7 +69,7 @@ model Record_categories {
   @@index([categoryId], map: "catecory_id")
 }
 
-model Report_categories {
+model ReportCategories {
   id Int @id @default(autoincrement())
   reportId Int @map("report_id")
   categoryId Int @map("category_id")
