@@ -3,6 +3,7 @@
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,11 +14,68 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique(map: "email") @db.VarChar(255)
-  name String @db.VarChar(20)
+  id              Int      @id @default(autoincrement())
+  email           String   @unique @db.VarChar(255)
+  name            String   @db.VarChar(20)
+  userReferenceId String   @unique @default(uuid())
+  platform String @db.VarChar(10)
+  refreshToken   String? @db.VarChar(500)
 
-  userReferenceId String @unique @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  records Record[]
 }
+
+model Categories {
+  id Int @id
+  category_name String @unique @db.VarChar(10)
+
+  record_categories Record_categories[]
+  report_categories Report_categories[]
+}
+
+model Record {
+  id Int @id @default(autoincrement())
+  userId Int @map("user_id")
+  title String
+  content String
+  occur_date Int @db.TinyInt
+  updated_at DateTime
+
+  user User @relation(fields: [userId], references: [id])
+  @@index([userId], map: "user_id")
+
+  record_categories Record_categories[]
+}
+
+model Report {
+  id Int @id @default(autoincrement())
+  
+  standard String @db.VarChar(200)
+  content String @db.VarChar(200)
+  year Int 
+
+  report_categories Report_categories[]
+}
+
+model Record_categories {
+  id Int @id @default(autoincrement())
+  recordId Int @map("record_id")
+  categoryId Int @map("category_id")
+  
+  record Record @relation(fields: [recordId], references: [id])
+  categories Categories @relation(fields: [categoryId], references: [id])
+  @@index([recordId], map: "record_id")
+  @@index([categoryId], map: "catecory_id")
+}
+
+model Report_categories {
+  id Int @id @default(autoincrement())
+  reportId Int @map("report_id")
+  categoryId Int @map("category_id")
+  
+  categories Categories @relation(fields: [categoryId], references: [id])
+  report Report @relation(fields: [reportId], references: [id])
+  @@index([categoryId], map: "category_id")
+  @@index([reportId], map: "report_id")
+}
+
+//db에 변경된 모델 반영: npx prisma migrate dev --name init
