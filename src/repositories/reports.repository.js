@@ -1,13 +1,39 @@
 import { prisma } from "../config/db.config.js";
 
+export const addReport = async (data) => {
+    const report = await prisma.report.findFirst( {where: {
+         userId: data.userId,
+         year: data.year
+     }});
+    if (report) {
+        return null;
+    }
+    const created = await prisma.report.create({
+        data: {
+            year: data.year,
+            standard: data.standard,
+            content: data.content,
+            user: { connect: { id: data.userId } }
+        }
+    });
+    return created;
+  };
+
 // 특정 유저가 가장 많이 등록한 카테고리 목록 조회
-// Record -> RecordCategories -> Categories 경로로 집계
-export const findMostUsedCategoriesByUserId = async (userId, limit = 5) => {
+export const findMostUsedCategoriesByUserIdAndYear = async (userId, year, limit = 5) => {
+
+  const startDate = new Date(`${year}-01-01`);
+  const endDate = new Date(`${year}-12-31T23:59:59`);
+
   const result = await prisma.recordCategories.groupBy({
     by: ["categoryId"],
     where: {
       record: {
         userId: userId,
+        occurDate: {
+            gte: startDate,
+            lte: endDate,
+        },
       },
     },
     _count: {
@@ -21,7 +47,7 @@ export const findMostUsedCategoriesByUserId = async (userId, limit = 5) => {
     take: limit,
   });
 
-  // categoryId만 있으니 카테고리 이름도 가져오기
+  //카테고리 이름 가져오기
   const categoryIds = result.map((r) => r.categoryId);
   const categories = await prisma.categories.findMany({
     where: {
@@ -39,3 +65,21 @@ export const findMostUsedCategoriesByUserId = async (userId, limit = 5) => {
     };
   });
 };
+
+export const findRecordsContentByUserIdAndYear = async (userId, year) => {
+  const startDate = new Date(`${year}-01-01`);
+  const endDate = new Date(`${year}-12-31T23:59:59`);
+
+  return await prisma.record.findMany({
+    where: {
+      userId: userId,
+      occurDate: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    select: {
+      content: true,
+    },
+  });
+}

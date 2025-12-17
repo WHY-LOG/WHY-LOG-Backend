@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { swaggerSetup } from "./config/swagger.config.js";
 import { handleCreateUser } from "./controllers/user.controller.js";
+import { handleCreateReports } from "./controllers/reports.controller.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/user", handleCreateUser);
+app.post("/api/user/:userId/reports", handleCreateReports);
 
 app.use((err, req, res, next) => {
   if (res.headersSent) {
