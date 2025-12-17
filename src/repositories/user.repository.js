@@ -1,6 +1,6 @@
 import { prisma } from "../config/db.config.js";
 
-
+// 유저 등록 API
 export const addUser = async (data) => {
   try {
     return await prisma.$transaction(async (tx) => {
@@ -39,8 +39,9 @@ export const addUser = async (data) => {
   }
 };
 
+// 유저 정보 조회 API
 export const findUserById = async (id) => {
   return prisma.user.findUnique({
-    where: { id },
+    where: { id: Number(id) },
   });
 };
