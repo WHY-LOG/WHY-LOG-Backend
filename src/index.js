@@ -2,11 +2,28 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { swaggerSetup } from "./config/swagger.config.js";
+import { handleCreateUser } from "./controllers/user.controller.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
+
+app.use((req, res, next) => {
+  res.success = (success) => {
+    return res.json({ resultType: "SUCCESS", error: null, success });
+  };
+
+  res.error = ({ errorCode = "unknown", reason = null, data = null }) => {
+    return res.json({
+      resultType: "FAIL",
+      error: { errorCode, reason, data },
+      success: null,
+    });
+  };
+
+  next();
+});
 
 app.use(cors());                            // cors 방식 허용
 app.use(express.static('public'));          // 정적 파일 접근
@@ -17,6 +34,20 @@ swaggerSetup(app); //swagger 세팅
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+app.post("/api/user", handleCreateUser);
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  res.status(err.statusCode || 500).error({
+    errorCode: err.errorCode || "unknown",
+    reason: err.reason || err.message || null,
+    data: err.data || null,
+  });
 });
 
 app.listen(port, () => {
