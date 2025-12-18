@@ -1,5 +1,8 @@
 import swaggerUi from "swagger-ui-express";
 import swaggerAutogen from "swagger-autogen";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const options = {
   openapi: "3.0.0",
@@ -13,7 +16,7 @@ const doc = {
     description: "WhyLog API 명세입니다.",
     version: "1.0.0",
   },
-  host: "152.70.239.43:3000",
+  host: process.env.SWAGGER_URL,
   server: [],
   schemes: ["http"],
 };
