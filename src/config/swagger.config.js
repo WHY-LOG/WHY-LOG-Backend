@@ -4,7 +4,7 @@ import swaggerAutogen from "swagger-autogen";
 const options = {
   openapi: "3.0.0",
   disableLogs: true,
-  writeOutputFile: false,
+  writeOutputFile: true,
 };
 
 const doc = {
@@ -31,7 +31,7 @@ export const swaggerSetup = (app) => {
 
   // 2. JSON 문서 생성 및 제공
   app.get("/openapi.json", async (req, res) => {
-    const outputFile = "/dev/null";
+    const outputFile = "../swagger-output.json";
     const routes = ["./src/index.js"]; 
     
     const result = await swaggerAutogen(options)(outputFile, routes, doc);
