@@ -13,7 +13,7 @@ const doc = {
     description: "WhyLog API 명세입니다.",
     version: "1.0.0",
   },
-  host: "localhost:3000",
+  // host: "localhost:3000",
   schemes: ["http"],
 };
 
