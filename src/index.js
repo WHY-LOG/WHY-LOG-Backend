@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import { swaggerSetup } from "./config/swagger.config.js";
-
+import { handleCreateRecord, handleGetRecord, handleUpdateRecord, handleDeleteRecord } from "./controllers/record.controller.js";
 import { handleCreateReports } from "./controllers/reports.controller.js";
 import { handleCreateUser, handleGetUser } from "./controllers/user.controller.js";
 
@@ -35,6 +35,11 @@ app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형
 
 swaggerSetup(app); //swagger 세팅
 
+app.use((req, res, next) => {
+  console.log(req.body);
+  next();
+})
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
@@ -42,9 +47,13 @@ app.get("/", (req, res) => {
 app.post("/api/user", handleCreateUser);
 app.get("/api/user/:userId", handleGetUser);
 app.post("/api/user/:userId/reports", handleCreateReports);
+app.post("/api/users/:userId/records", handleCreateRecord)
+app.get("/api/users/:userId/records", handleGetRecord)
+app.put("/api/users/:userId/records/:recordId", handleUpdateRecord)
+app.delete("/api/users/:userId/records/:recordId", handleDeleteRecord)
 
 app.use((err, req, res, next) => {
-  if (res.headersSent) {
+  if(res.headersSent){
     return next(err);
   }
 
