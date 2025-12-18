@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { addReport, findMostUsedCategoriesByUserIdAndYear, findRecordsContentByUserIdAndYear } from "../repositories/reports.repository.js"
+import { addReport, findMostUsedCategoriesByUserIdAndYear, findRecordContentsByUserIdAndYear } from "../repositories/report.repository.js"
 import { generateAIResponse } from "./gemini.service.js";
 import { createReportPrompts } from "../utils/prompts.js";
 export const createReport = async (data) => {
@@ -37,7 +37,7 @@ export const createReport = async (data) => {
         percent: Math.round((cat.count / totalCount) * 100) 
     }));
 
-    const records = await findRecordsContentByUserIdAndYear(data.userId, data.year);
+    const records = await findRecordContentsByUserIdAndYear(data.userId, data.year);
     // const top3Category = allCategories.slice(0,3);
 
     const prompt = createReportPrompts(records);

@@ -66,7 +66,7 @@ export const findMostUsedCategoriesByUserIdAndYear = async (userId, year, limit 
   });
 };
 
-export const findRecordsContentByUserIdAndYear = async (userId, year) => {
+export const findRecordContentsByUserIdAndYear = async (userId, year) => {
   const startDate = new Date(`${year}-01-01`);
   const endDate = new Date(`${year}-12-31T23:59:59`);
 
