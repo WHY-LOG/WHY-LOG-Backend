@@ -45,3 +45,21 @@ export const findUserById = async (id) => {
     where: { id: Number(id) },
   });
 };
+
+// 유저 정보 수정 API
+export const updateUserById = async (id, data) => {
+  return prisma.user.update({
+    where: { id: Number(id) },
+    data: {
+      name: data.name,
+      email: data.email,
+      imgUrl: data.imgUrl,
+    },
+  });
+};
+
+export const findUserByEmail = async (email) => {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+};
