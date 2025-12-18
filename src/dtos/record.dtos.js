@@ -92,6 +92,8 @@ export const updateRecordDto = (data) => {
 }
 
 export const deleteRecordDto = (data) => {
+    const errors = [];
+
     const requireFields = ["userId", "recordId"];
 
     for(const field of requireFields){
