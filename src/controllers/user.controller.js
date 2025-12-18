@@ -1,4 +1,4 @@
-import { getUserById, updateUser, userCreate } from "../services/user.service.js";
+import { deleteUser, getUserById, updateUser, userCreate } from "../services/user.service.js";
 import { bodyToUser } from "../dtos/user.dto.js";
 import { StatusCodes } from "http-status-codes";
 
@@ -356,6 +356,96 @@ export const handleUpdateUser = async (req, res, next) => {
     const { userId } = req.params;
     const user = await updateUser(userId, bodyToUser(req.body));
     res.status(StatusCodes.OK).success(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// 유저 정보 삭제 API
+export const handleDeleteUser = async (req, res, next) => {
+  /*
+    #swagger.summary = '유저 정보 삭제 API';
+    #swagger.description = 'userId를 기반으로 유저 정보를 삭제합니다.';
+    #swagger.tags = ['User'];
+
+    #swagger.parameters['userId'] = {
+      in: 'path',
+      required: true,
+      schema: { type: 'integer' },
+      example: 1
+    };
+
+    #swagger.responses[200] = {
+      description: "유저 삭제 성공",
+      content: {
+        "application/json": {
+          example: {
+            resultType: "SUCCESS",
+            error: null,
+            success: {
+              message: "유저 삭제 완료"
+            }
+          }
+        }
+      }
+    };
+
+    #swagger.responses[400] = {
+      description: "userId 누락",
+      content: {
+        "application/json": {
+          example: {
+            resultType: "FAIL",
+            error: {
+              errorCode: "U001",
+              reason: "userId가 누락되었습니다.",
+              data: null
+            },
+            success: null
+          }
+        }
+      }
+    };
+
+    #swagger.responses[404] = {
+      description: "유저를 찾을 수 없음",
+      content: {
+        "application/json": {
+          example: {
+            resultType: "FAIL",
+            error: {
+              errorCode: "U003",
+              reason: "유저를 찾을 수 없습니다.",
+              data: null
+            },
+            success: null
+          }
+        }
+      }
+    };
+
+    #swagger.responses[500] = {
+      description: "서버 내부 오류",
+      content: {
+        "application/json": {
+          example: {
+            resultType: "FAIL",
+            error: {
+              errorCode: "U999",
+              reason: "유저 생성 중 서버 오류",
+              data: null
+            },
+            success: null
+          }
+        }
+      }
+    };
+  */
+
+  try {
+    const { userId } = req.params;
+    await deleteUser(userId);
+    res.status(StatusCodes.OK).success({ message: "유저 삭제 완료" });
   } catch (err) {
     next(err);
   }

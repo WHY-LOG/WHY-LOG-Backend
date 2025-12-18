@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { addUser, findUserByEmail, findUserById, updateUserById } from "../repositories/user.repository.js";
+import { addUser, deleteUserById, findUserByEmail, findUserById, updateUserById } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
 
 // 유저 등록 API
@@ -65,6 +65,7 @@ export const getUserById = async (userId) => {
   return responseFromUser(user);
 };
 
+// 유저 정보 수정 API
 export const updateUser = async (userId, data) => {
   if (!userId) {
     const err = new Error("userId가 누락되었습니다.");
@@ -105,4 +106,24 @@ export const updateUser = async (userId, data) => {
 
   const updated = await updateUserById(userId, data);
   return responseFromUser(updated);
+};
+
+// 유저 정보 삭제 API
+export const deleteUser = async (userId) => {
+  if (!userId) {
+    const err = new Error("userId가 누락되었습니다.");
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    err.errorCode = "U001";
+    throw err;
+  }
+
+  const user = await findUserById(userId);
+  if (!user) {
+    const err = new Error("유저를 찾을 수 없습니다.");
+    err.statusCode = StatusCodes.NOT_FOUND;
+    err.errorCode = "U003";
+    throw err;
+  }
+
+  await deleteUserById(userId);
 };
