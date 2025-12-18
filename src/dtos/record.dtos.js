@@ -79,7 +79,7 @@ export const updateRecordDto = (data) => {
         err.data = errors;
         throw err;
     }
-    
+
     return {
         userId: Number(data.userId),
         recordId: Number(data.recordId),
@@ -92,6 +92,20 @@ export const updateRecordDto = (data) => {
 }
 
 export const deleteRecordDto = (data) => {
+    const requireFields = ["userId", "recordId"];
+
+    for(const field of requireFields){
+        if(!data[field]) errors.push(({field: field, reason: "필드가 누락되었습니다."}));
+    }
+
+    if(errors.length > 0) {
+        const err = new Error("입력값이 유효하지 않습니다.");
+        err.statusCode = StatusCodes.BAD_REQUEST;
+        err.errorCode = "C001";
+        err.data = errors;
+        throw err;
+    }
+    
     return {
         userId: Number(data.userId),
         recordId: Number(data.recordId)
