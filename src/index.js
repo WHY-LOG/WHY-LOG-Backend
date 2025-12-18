@@ -4,7 +4,7 @@ import cors from "cors";
 import { swaggerSetup } from "./config/swagger.config.js";
 import { handleCreateRecord, handleGetRecord, handleUpdateRecord, handleDeleteRecord } from "./controllers/record.controller.js";
 import { handleCreateReport } from "./controllers/report.controller.js";
-import { handleCreateUser, handleGetUser, handleUpdateUser } from "./controllers/user.controller.js";
+import { handleCreateUser, handleDeleteUser, handleGetUser, handleUpdateUser } from "./controllers/user.controller.js";
 
 
 dotenv.config();
@@ -48,6 +48,7 @@ app.get("/", (req, res) => {
 app.post("/api/user", handleCreateUser);
 app.get("/api/user/:userId", handleGetUser);
 app.patch("/api/user/:userId", handleUpdateUser);
+app.delete("/api/user/:userId", handleDeleteUser);
 
 // Report
 app.post("/api/user/:userId/reports", handleCreateReport);
