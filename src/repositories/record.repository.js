@@ -77,7 +77,7 @@ export const getRecord = async (data) => {
     return formattedRecords;
 }
 
-// recordId, title?, content?, occurDate?, category?, updatedAt
+// userId, recordId, title?, content?, occurDate?, category?, updatedAt
 export const updateRecord = async (data) => {
     const record = await prisma.record.update({
         data: {
@@ -93,10 +93,23 @@ export const updateRecord = async (data) => {
         },
         where: {
             id: data.recordId,
+            userId: data.userId
         },
     })
 
     return record.id;
+}
+
+// userId, recordId
+export const existingRecord = async (data) => {
+    const record = await prisma.record.findFirst({
+        where: {
+            id: data.recordId,
+            userId: data.userId
+        }
+    })
+    
+    return record;
 }
 
 // recordId
