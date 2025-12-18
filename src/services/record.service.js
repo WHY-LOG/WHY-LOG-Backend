@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { 
     createRecord as createRecordRepo, 
-    getRecord as getRecordRepo, 
+    getRecords as getRecordsRepo, 
     updateRecord as updateRecordRepo,
     deleteRecord as deleteRecordRepo,
     existingRecord } from '../repositories/record.repository.js'
@@ -41,7 +41,7 @@ export const getRecord = async (data) => {
     }
 
     try{
-        const records = await getRecordRepo(data);
+        const records = await getRecordsRepo(data);
         return records;
     } catch (error) {
         const err = new Error("기록 조회 중 서버 오류.");

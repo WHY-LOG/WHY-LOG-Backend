@@ -2,7 +2,6 @@ import { prisma } from '../config/db.config.js'
 
 // userId, title, content, occurDate, updatedAt
 export const createRecord = async (data) => {
-    console.log(data);
     const record = await prisma.record.create({
         data: {
             userId: data.userId,
@@ -36,7 +35,7 @@ export const createRecord = async (data) => {
 }
 
 // userId, categoryId
-export const getRecord = async (data) => {
+export const getRecords = async (data) => {
     const records = await prisma.record.findMany({
         select: {
             id: true,
@@ -91,13 +90,27 @@ export const updateRecord = async (data) => {
                 }))
             }
         },
+        include: {
+            recordCategories: {
+                include: {
+                    categories: true
+                }
+            }
+        },
         where: {
             id: data.recordId,
             userId: data.userId
         },
     })
-
-    return record.id;
+    
+    const formattedRecord = {
+        id: record.id,
+        title: record.title,
+        content: record.content,
+        occurDate: record.occurDate,
+        categories: record.recordCategories.map(rc => rc.categories.categoryName)
+    }
+    return formattedRecord;
 }
 
 // userId, recordId
