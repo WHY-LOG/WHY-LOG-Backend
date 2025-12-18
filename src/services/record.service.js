@@ -31,9 +31,25 @@ export const createRecord = async (data) => {
 }
 
 export const getRecord = async (data) => {
-    const records = await getRecordRepo(data);
+    const user = await findUserById(data.userId);
+    
+    if (!user) {
+        const err = new Error("생성된 유저를 찾을 수 없습니다.");
+        err.statusCode = 404;
+        err.errorCode = "U003";
+        throw err;
+    }
 
-    return records;
+    try{
+        const records = await getRecordRepo(data);
+
+        return records;
+    } catch (error) {
+        const err = new Error("기록 조회 중 서버 오류.");
+        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR,
+        err.errorCode = "C003";
+        throw err;
+    }
 }
 
 export const updateRecord = async (data) => {

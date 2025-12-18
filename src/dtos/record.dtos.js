@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 
 export const createRecordDto = (data) => {
     const errors = [];
-    const requireFields = ["title", "content", "occurDate", "category"];
+    const requireFields = ["userId", "title", "content", "occurDate", "category"];
 
     for(const field of requireFields){
         if(!data.body[field]) errors.push(({field: field, reason: "필드가 누락되었습니다."}));
@@ -34,6 +34,15 @@ export const createRecordDto = (data) => {
 }
 
 export const getRecordDto = (data) => {
+
+    if(!data.userId) {
+        const err = new Error("입력값이 유효하지 않습니다.");
+        err.statusCode = StatusCodes.BAD_REQUEST;
+        err.errorCode = "C001";
+        err.data = {field: "userId", reason: "userId 형식이 올바르지 않습니다"};
+        throw err;
+    }
+
     return {
         userId: Number(data.userId),
         categoryId: Number(data.categoryId)
