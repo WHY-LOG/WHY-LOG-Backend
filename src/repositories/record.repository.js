@@ -108,7 +108,7 @@ export const existingRecord = async (data) => {
             userId: data.userId
         }
     })
-    
+
     return record;
 }
 
@@ -129,5 +129,5 @@ export const deleteRecord = async (data) => {
 
     await prisma.$transaction([deleteRecordCategory, deleteRecord]);
 
-    return deleteRecord.id
+    return data.recordId
 }

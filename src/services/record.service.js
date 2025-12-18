@@ -84,6 +84,7 @@ export const deleteRecord = async (data) => {
 
     try{
         const deletedRecordId = await deleteRecordRepo(data);
+        console.log(deletedRecordId);
         return deletedRecordId
     } catch(error) {
         const err = new Error("기록 삭제 중 서버 오류.");
