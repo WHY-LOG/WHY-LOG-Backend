@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { addUser, findUserById } from "../repositories/user.repository.js";
+import { addUser, findUserByEmail, findUserById, updateUserById } from "../repositories/user.repository.js";
 import { responseFromUser } from "../dtos/user.dto.js";
 
 // 유저 등록 API
@@ -49,7 +49,7 @@ export const getUserById = async (userId) => {
   if (!userId) {
     const err = new Error("userId가 누락되었습니다.");
     err.statusCode = StatusCodes.BAD_REQUEST;
-    err.errorCode = "U004";
+    err.errorCode = "U001";
     throw err;
   }
 
@@ -58,9 +58,51 @@ export const getUserById = async (userId) => {
   if (!user) {
     const err = new Error("유저를 찾을 수 없습니다.");
     err.statusCode = StatusCodes.NOT_FOUND;
-    err.errorCode = "U005";
+    err.errorCode = "U003";
     throw err;
   }
 
   return responseFromUser(user);
+};
+
+export const updateUser = async (userId, data) => {
+  if (!userId) {
+    const err = new Error("userId가 누락되었습니다.");
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    err.errorCode = "U001";
+    throw err;
+  }
+
+  const user = await findUserById(userId);
+  if (!user) {
+    const err = new Error("유저를 찾을 수 없습니다.");
+    err.statusCode = StatusCodes.NOT_FOUND;
+    err.errorCode = "U003";
+    throw err;
+  }
+
+  if (data.email) {
+    const existing = await findUserByEmail(data.email);
+    if (existing && existing.id !== Number(userId)) {
+      const err = new Error("이미 사용 중인 이메일입니다.");
+      err.statusCode = StatusCodes.CONFLICT;
+      err.errorCode = "U004";
+      throw err;
+    }
+  }
+
+  const isChanged =
+    (data.name && data.name !== user.name) ||
+    (data.email && data.email !== user.email) ||
+    (data.imgUrl && data.imgUrl !== user.imgUrl);
+
+  if (!isChanged) {
+    const err = new Error("변경된 정보가 없습니다.");
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    err.errorCode = "U005";
+    throw err;
+  }
+
+  const updated = await updateUserById(userId, data);
+  return responseFromUser(updated);
 };
