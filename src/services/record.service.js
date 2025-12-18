@@ -22,7 +22,7 @@ export const createRecord = async (data) => {
         return record;
     } catch (error) {
         const err = new Error("기록 생성 중 서버 오류.");
-        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR,
+        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
         err.errorCode = "C999";
         err.data = data;
         throw err;
@@ -45,7 +45,7 @@ export const getRecord = async (data) => {
         return records;
     } catch (error) {
         const err = new Error("기록 조회 중 서버 오류.");
-        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR,
+        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
         err.errorCode = "C999";
         throw err;
     }
@@ -56,7 +56,7 @@ export const updateRecord = async (data) => {
     
     if(!isExist) {
         const err = new Error("한 줄 기록을 찾을 수 없습니다.");
-        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR,
+        err.StatusCodes = 404;
         err.errorCode = "C004";
         throw err;
     }
@@ -66,14 +66,30 @@ export const updateRecord = async (data) => {
         return record;
     } catch(error) {
         const err = new Error("기록 수정 중 서버 오류.");
-        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR,
+        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
         err.errorCode = "C999";
         throw err;
     }
 }
 
 export const deleteRecord = async (data) => {
-    const deletedRecordId = await deleteRecordRepo(data);
+    const isExist = await existingRecord({userId: data.userId, recordId: data.recordId});
+    
+    if(!isExist) {
+        const err = new Error("한 줄 기록을 찾을 수 없습니다.");
+        err.StatusCodes = 404;
+        err.errorCode = "C004";
+        throw err;
+    }
 
-    return deletedRecordId
+    try{
+        const deletedRecordId = await deleteRecordRepo(data);
+        return deletedRecordId
+    } catch(error) {
+        const err = new Error("기록 삭제 중 서버 오류.");
+        err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
+        err.errorCode = "C999";
+        throw err;
+    }
+    
 }
