@@ -122,6 +122,7 @@ export const handleCreateRecord = async (req, res, next) => {
 
 export const handleGetRecord = async (req, res, next) => {
     /*
+    #swagger.auto = false
     #swagger.tags = ['Record']
     #swagger.summary = '한 줄 기록 조회 API'
     #swagger.description = '특정 유저의 연도와 월에 해당하는 한 줄 기록을 가져옵니다.'
