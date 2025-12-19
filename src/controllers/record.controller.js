@@ -8,7 +8,7 @@ export const handleCreateRecord = async (req, res, next) => {
     #swagger.summary = '한 줄 기록 생성 API'
     #swagger.description = '특정 유저의 한 줄 기록을 생성합니다.'
     #swagger.parameters['userId'] = { in: 'path', description: '유저 ID', type: 'integer' }
-    #swagger.parameters['categoryId'] = { ignore: true }
+    #swagger.query['categoryId'] = { ignore: true }
 
     #swagger.requestBody = {
         required: true,
@@ -124,8 +124,11 @@ export const handleGetRecord = async (req, res, next) => {
     /*
     #swagger.tags = ['Record']
     #swagger.summary = '한 줄 기록 조회 API'
-    #swagger.description = '특정 유저의 모든 한 줄 기록을 가져옵니다.'
+    #swagger.description = '특정 유저의 연도와 월에 해당하는 한 줄 기록을 가져옵니다.'
     #swagger.parameters['userId'] = { in: 'path', description: '유저 ID', type: 'integer' }
+    #swagger.parameters['year'] = { in: 'query', required: true, description: '조회할 연도', type: 'integer' }
+    #swagger.parameters['month'] = { in: 'query', required: true, description: '조회할 월', type: 'integer' }
+    
     #swagger.responses[200] = {
         description: "조회 성공 응답",
         schema: {
@@ -170,8 +173,8 @@ export const handleGetRecord = async (req, res, next) => {
 
     try{
         const userId = req.params.userId;
-        const categoryId = req.query.categoryId;
-        const result = await getRecord(getRecordDto({userId, categoryId}))
+        const {year, month, categoryId} = req.query;
+        const result = await getRecord(getRecordDto({userId, categoryId, year, month}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);

@@ -28,7 +28,10 @@ export const createRecord = async (data) => {
         title: record.title,
         content: record.content,
         occurDate: record.occurDate,
-        categories: record.recordCategories.map(rc => rc.categories.categoryName)
+        categories: record.recordCategories.map(rc => ({
+            categoryId: rc.categories.id, 
+            categoryName: rc.categories.categoryName
+        }))
     }
 
     return formattedRecord;
@@ -36,6 +39,9 @@ export const createRecord = async (data) => {
 
 // userId, categoryId
 export const getRecords = async (data) => {
+    const nextDate = new Date(data.occurDate);
+    nextDate.setDate(data.occurDate.getDate() + 1);
+
     const records = await prisma.record.findMany({
         select: {
             id: true,
@@ -46,6 +52,7 @@ export const getRecords = async (data) => {
                 select: {
                     categories: {
                         select: {
+                            id: true,
                             categoryName: true
                         }
                     }
@@ -54,6 +61,10 @@ export const getRecords = async (data) => {
         },
         where: {
             userId: data.userId,
+            occurDate: {
+                gte: data.occurDate,
+                lt: nextDate
+            },
             recordCategories: data.categoryId ? {
                 some: {
                     categoryId: data.categoryId
@@ -70,7 +81,10 @@ export const getRecords = async (data) => {
         title: record.title,
         content: record.content,
         occurDate: record.occurDate,
-        categories: record.recordCategories.map(rc => rc.categories.categoryName)
+        categories: record.recordCategories.map(rc => ({
+            categoryId: rc.categories.id, 
+            categoryName: rc.categories.categoryName
+        }))
     }));
 
     return formattedRecords;
@@ -108,7 +122,10 @@ export const updateRecord = async (data) => {
         title: record.title,
         content: record.content,
         occurDate: record.occurDate,
-        categories: record.recordCategories.map(rc => rc.categories.categoryName)
+        categories: record.recordCategories.map(rc => ({
+            categoryId: rc.categories.id, 
+            categoryName: rc.categories.categoryName
+        }))
     }
     return formattedRecord;
 }
