@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createRecordDto, getRecordDto, updateRecordDto, deleteRecordDto } from "../dtos/record.dtos.js";
+import { bodyToRecord, bodyToGetRecord, bodyToUpdateRecord, bodyToDeleteRecord } from "../dtos/record.dtos.js";
 import { createRecord, getRecord, updateRecord, deleteRecord } from "../services/record.service.js";
 
 export const handleCreateRecord = async (req, res, next) => {
@@ -113,7 +113,7 @@ export const handleCreateRecord = async (req, res, next) => {
     
     try{
         const userId = req.params.userId;
-        const result = await createRecord(createRecordDto({userId, body: req.body}))
+        const result = await createRecord(bodyToRecord({userId, body: req.body}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -129,7 +129,8 @@ export const handleGetRecord = async (req, res, next) => {
     #swagger.parameters['userId'] = { in: 'path', description: '유저 ID', type: 'integer' }
     #swagger.parameters['year'] = { in: 'query', required: true, description: '조회할 연도', type: 'integer' }
     #swagger.parameters['month'] = { in: 'query', required: true, description: '조회할 월', type: 'integer' }
-    
+    #swagger.parameters['categoryId'] = { in: 'query', description: '필터링할 카테고리 ID', type: 'integer' }
+
     #swagger.responses[200] = {
         description: "조회 성공 응답",
         schema: {
@@ -175,7 +176,7 @@ export const handleGetRecord = async (req, res, next) => {
     try{
         const userId = req.params.userId;
         const {year, month, categoryId} = req.query;
-        const result = await getRecord(getRecordDto({userId, categoryId, year, month}))
+        const result = await getRecord(bodyToGetRecord({userId, categoryId, year, month}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -294,7 +295,7 @@ export const handleUpdateRecord = async (req, res, next) => {
 
     try{
         const {userId, recordId} = req.params
-        const result = await updateRecord(updateRecordDto({userId, recordId, body: req.body}))
+        const result = await updateRecord(bodyToUpdateRecord({userId, recordId, body: req.body}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -344,7 +345,7 @@ export const handleDeleteRecord = async (req, res, next) => {
 
     try{
         const {userId, recordId} = req.params
-        const result = await deleteRecord(deleteRecordDto({userId, recordId}))
+        const result = await deleteRecord(bodyToDeleteRecord({userId, recordId}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
