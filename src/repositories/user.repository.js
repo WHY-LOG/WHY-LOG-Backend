@@ -1,6 +1,6 @@
 import { prisma } from "../config/db.config.js";
 
-// 유저 등록 API
+// 유저 등록
 export const addUser = async (data) => {
   try {
     return await prisma.$transaction(async (tx) => {
@@ -39,9 +39,68 @@ export const addUser = async (data) => {
   }
 };
 
-// 유저 정보 조회 API
+// 유저 정보 조회
 export const findUserById = async (id) => {
   return prisma.user.findUnique({
     where: { id: Number(id) },
+  });
+};
+
+// 유저 정보 수정
+export const updateUserById = async (id, data) => {
+  return prisma.user.update({
+    where: { id: Number(id) },
+    data: {
+      name: data.name,
+      email: data.email,
+      imgUrl: data.imgUrl,
+    },
+  });
+};
+
+// 이메일로 유저 정보 조회
+export const findUserByEmail = async (email) => {
+  return prisma.user.findUnique({
+    where: { email },
+  });
+};
+
+// 유저 정보 삭제
+export const deleteUserById = async (id) => {
+  const userId = Number(id);
+
+  return prisma.$transaction(async (tx) => {
+    // 1. RecordCategories
+    await tx.recordCategories.deleteMany({
+      where: {
+        record: {
+          userId,
+        },
+      },
+    });
+
+    // 2. Record
+    await tx.record.deleteMany({
+      where: { userId },
+    });
+
+    // 3. ReportCategories
+    await tx.reportCategories.deleteMany({
+      where: {
+        report: {
+          userId,
+        },
+      },
+    });
+
+    // 4. Report
+    await tx.report.deleteMany({
+      where: { userId },
+    });
+
+    // 5. User
+    return tx.user.delete({
+      where: { id: userId },
+    });
   });
 };
