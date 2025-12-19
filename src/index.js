@@ -41,10 +41,6 @@ app.use((req, res, next) => {
   next();
 })
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 // User
 app.post("/api/user", handleCreateUser);
 app.get("/api/user/:userId", handleGetUser);
