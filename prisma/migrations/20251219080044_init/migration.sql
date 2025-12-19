@@ -1,14 +1,13 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE `User` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(20) NOT NULL,
+    `email` VARCHAR(255) NOT NULL,
+    `img_url` VARCHAR(200) NULL,
 
-  - You are about to drop the column `createdAt` on the `User` table. All the data in the column will be lost.
-  - You are about to drop the column `updatedAt` on the `User` table. All the data in the column will be lost.
-
-*/
--- AlterTable
-ALTER TABLE `User` DROP COLUMN `createdAt`,
-    DROP COLUMN `updatedAt`,
-    ADD COLUMN `refreshToken` VARCHAR(500) NULL;
+    UNIQUE INDEX `User_email_key`(`email`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `Categories` (
@@ -25,8 +24,8 @@ CREATE TABLE `Record` (
     `user_id` INTEGER NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `content` VARCHAR(191) NOT NULL,
-    `occur_date` TINYINT NOT NULL,
-    `updated_at` DATETIME(3) NOT NULL,
+    `occur_date` DATETIME(3) NOT NULL,
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     INDEX `user_id`(`user_id`),
     PRIMARY KEY (`id`)
@@ -35,14 +34,17 @@ CREATE TABLE `Record` (
 -- CreateTable
 CREATE TABLE `Report` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
     `standard` VARCHAR(200) NOT NULL,
-    `content` VARCHAR(200) NOT NULL,
+    `content` VARCHAR(191) NOT NULL,
+    `year` INTEGER NOT NULL,
 
+    INDEX `Report_user_id_idx`(`user_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Record_categories` (
+CREATE TABLE `RecordCategories` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `record_id` INTEGER NOT NULL,
     `category_id` INTEGER NOT NULL,
@@ -53,10 +55,11 @@ CREATE TABLE `Record_categories` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Report_categories` (
+CREATE TABLE `ReportCategories` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `report_id` INTEGER NOT NULL,
     `category_id` INTEGER NOT NULL,
+    `percent` INTEGER NOT NULL DEFAULT 0,
 
     INDEX `category_id`(`category_id`),
     INDEX `report_id`(`report_id`),
@@ -67,16 +70,16 @@ CREATE TABLE `Report_categories` (
 ALTER TABLE `Record` ADD CONSTRAINT `Record_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Record_categories` ADD CONSTRAINT `Record_categories_record_id_fkey` FOREIGN KEY (`record_id`) REFERENCES `Record`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Report` ADD CONSTRAINT `Report_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Record_categories` ADD CONSTRAINT `Record_categories_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `RecordCategories` ADD CONSTRAINT `RecordCategories_record_id_fkey` FOREIGN KEY (`record_id`) REFERENCES `Record`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Report_categories` ADD CONSTRAINT `Report_categories_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `RecordCategories` ADD CONSTRAINT `RecordCategories_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Report_categories` ADD CONSTRAINT `Report_categories_report_id_fkey` FOREIGN KEY (`report_id`) REFERENCES `Report`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ReportCategories` ADD CONSTRAINT `ReportCategories_category_id_fkey` FOREIGN KEY (`category_id`) REFERENCES `Categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
--- RenameIndex
-ALTER TABLE `User` RENAME INDEX `email` TO `User_email_key`;
+-- AddForeignKey
+ALTER TABLE `ReportCategories` ADD CONSTRAINT `ReportCategories_report_id_fkey` FOREIGN KEY (`report_id`) REFERENCES `Report`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

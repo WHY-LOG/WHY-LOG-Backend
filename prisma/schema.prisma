@@ -53,7 +53,7 @@ model Report {
   year Int 
 
   user User @relation(fields: [userId], references: [id])
-  repordCategories ReportCategories[]
+  reportCategories ReportCategories[]
 
   @@index([userId])
 }
@@ -73,7 +73,8 @@ model ReportCategories {
   id Int @id @default(autoincrement())
   reportId Int @map("report_id")
   categoryId Int @map("category_id")
-  
+  percent Int @default(0)
+
   categories Categories @relation(fields: [categoryId], references: [id])
   report Report @relation(fields: [reportId], references: [id])
   @@index([categoryId], map: "category_id")
