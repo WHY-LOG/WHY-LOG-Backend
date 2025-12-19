@@ -1,7 +1,14 @@
 import { StatusCodes } from "http-status-codes";
-import { addReport, findMostUsedCategoriesByUserIdAndYear, findRecordContentsByUserIdAndYear } from "../repositories/report.repository.js"
+import { 
+    addReport, 
+    existingReport, 
+    findMostUsedCategoriesByUserIdAndYear, 
+    findRecordContentsByUserIdAndYear, 
+    updateReport as updateReportRepo 
+} from "../repositories/report.repository.js"
 import { generateAIResponse } from "./gemini.service.js";
 import { createReportPrompts } from "../utils/prompts.js";
+
 export const createReport = async (data) => {
 
     //req 필드 검사
@@ -14,7 +21,9 @@ export const createReport = async (data) => {
     }
 
     //모든 카테고리 집계
+    console.log("1. 카테고리 집계 시작");
     const allCategories = await findMostUsedCategoriesByUserIdAndYear(data.userId, data.year, 100);
+    console.log("2. 카테고리 집계 완료: ", allCategories.length);
 
     //만약 해당 userId의 기록이 없다면:
     if (allCategories.length === 0) {
@@ -38,23 +47,27 @@ export const createReport = async (data) => {
     }));
 
     const records = await findRecordContentsByUserIdAndYear(data.userId, data.year);
+    console.log("3. 레코드 조회 완료: ", records.length);
     // const top3Category = allCategories.slice(0,3);
 
     const prompt = createReportPrompts(records);
     //ai가 판단한 기준
+    console.log("4. AI 응답 요청 시작");
     const standard = await generateAIResponse(prompt);
+    console.log("5. AI 응답 완료");
 
     //userId, year, standard, content(초기 생성에는 기본 null값) 
     const newReport = await addReport({
         userId: data.userId,
         year: data.year,
         standard: standard,
-        content: ""
+        content: "",
+        graphData: graphData
     });
 
     if (!newReport) {
         const err = new Error("해당 연도의 레포트가 이미 존재합니다.");
-        err.StatusCodes = StatusCodes.CONFLICT;
+        err.statusCode = StatusCodes.CONFLICT;
         err.errorCode = "R003";
         err.data = data;
         throw err;
@@ -66,4 +79,34 @@ export const createReport = async (data) => {
         standard: newReport.standard,
         graphData: graphData
     };
+}
+
+export const updateReport = async (data) => {
+    const isExist = await existingReport(data);
+    if(!isExist) {
+        const err = new Error("레포트가 존재하지 않습니다.");
+        err.statusCode = StatusCodes.NOT_FOUND;
+        err.errorCode = "R004";
+        err.data = data;
+        throw err;
+    }
+
+    try {
+        const newReport = await updateReportRepo(data);
+        const graphData = newReport.reportCategories.map(item => ({
+            categoryId: item.categoryId,
+            categoryName: item.categories.categoryName,
+            percent: item.percent
+        }))
+        return {
+            ...newReport,
+            graphData: graphData
+        };
+    } catch(error) {
+        const err = new Error("레포트 수정중 오류.");
+        err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+        err.errorCode = "R999";
+        err.data = data;
+        throw err;
+    }
 }

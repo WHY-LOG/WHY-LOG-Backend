@@ -16,6 +16,17 @@ export const addReport = async (data) => {
             user: { connect: { id: data.userId } }
         }
     });
+    
+    if (data.graphData && data.graphData.length > 0) {
+        await prisma.reportCategories.createMany({
+          data: data.graphData.map(item => ({
+            reportId: created.id,
+            categoryId: item.categoryId,
+            percent: item.percent,
+          }))
+        });
+    }
+
     return created;
   };
 
@@ -33,7 +44,7 @@ export const findMostUsedCategoriesByUserIdAndYear = async (userId, year, limit 
         occurDate: {
             gte: startDate,
             lte: endDate,
-        },
+          },
       },
     },
     _count: {
@@ -82,4 +93,34 @@ export const findRecordContentsByUserIdAndYear = async (userId, year) => {
       content: true,
     },
   });
+}
+
+export const existingReport = async (data) => {
+  const report = await prisma.report.findFirst({
+    where: {
+      id: data.reportId,
+      userId: data.userId,
+    }
+  });
+
+  return report;
+}
+
+export const updateReport = async (data) => {
+  const report = await prisma.report.update({
+    where: {
+      id: data.reportId,
+    },
+    data: {
+      content: data.content
+    },
+    include: {
+      reportCategories: {
+        include: {
+          categories: true
+        }
+      }
+    }
+  });
+  return report;
 }
