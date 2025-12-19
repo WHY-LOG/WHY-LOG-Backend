@@ -74,6 +74,14 @@ export const updateUser = async (userId, data) => {
     throw err;
   }
 
+  if (!data.email.includes("@")) {
+    const err = new Error("이메일 형식이 올바르지 않습니다.");
+    err.statusCode = StatusCodes.BAD_REQUEST;
+    err.errorCode = "U002";
+    err.data = data;
+    throw err;
+  }
+
   const user = await findUserById(userId);
   if (!user) {
     const err = new Error("유저를 찾을 수 없습니다.");

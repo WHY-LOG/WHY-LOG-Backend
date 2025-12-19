@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 // User
 app.post("/api/user", handleCreateUser);
 app.get("/api/user/:userId", handleGetUser);
-app.patch("/api/user/:userId", handleUpdateUser);
+app.put("/api/user/:userId", handleUpdateUser);
 app.delete("/api/user/:userId", handleDeleteUser);
 
 // Report
