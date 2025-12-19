@@ -51,11 +51,20 @@ export const handleCreateRecord = async (req, res, next) => {
             resultType: "SUCCESS",
             error: "null",
             success: {
-                id: 1,
+                RecordId: 1,
                 title: "번지점프 예약해놓고 취소했다.",
                 content: "버킷리스트 중 하나여서 번지점프 예약...",
                 occurDate: "2025-12-01T00:00:00.000Z",
-                categories: ["기대", "회피"]
+                categories: [
+                    {
+                        "categoryId": 3,
+                        "categoryName": "기대"
+                    },
+                    {
+                        "categoryId": 4,
+                        "categoryName": "회피"
+                    }
+                ]
             }
         }
     }
@@ -138,11 +147,20 @@ export const handleGetRecord = async (req, res, next) => {
             error: "null",
             success: [
                 {
-                    id: 2,
+                    RecordId: 2,
                     title: "싸웠던 친구에게 다가가 화해를 하지 못했다.",
                     content: "사실 별거 아닌 거 그냥 먼저 얘기...",
                     occurDate: "2025-12-01T00:00:00.000Z",
-                    categories: ["두려움", "회피"]
+                    categories: [
+                        {
+                            "categoryId": 3,
+                            "categoryName": "기대"
+                        },
+                        {
+                            "categoryId": 4,
+                            "categoryName": "회피"
+                        }
+                    ]
                 }
             ]
         }
@@ -233,11 +251,20 @@ export const handleUpdateRecord = async (req, res, next) => {
             resultType: "SUCCESS",
             error: "null",
             success: {
-                id: 1,
+                RecordId: 1,
                 title: "테스트 데이터",
                 content: "테스트 데이터",
                 occurDate: "2025-11-01T00:00:00.000Z",
-                categories: ["비교", "두려움"]
+                categories: [
+                    {
+                        "categoryId": 1,
+                        "categoryName": "기대"
+                    },
+                    {
+                        "categoryId": 2,
+                        "categoryName": "회피"
+                    }
+                ]
             }
         }
     }
@@ -315,7 +342,9 @@ export const handleDeleteRecord = async (req, res, next) => {
         schema: {
             resultType: "SUCCESS",
             error: "null",
-            success: 1
+            success: {
+                recordId: 1
+            }
         }
     }
     #swagger.responses[404] = {
