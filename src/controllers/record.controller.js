@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createRecordDto, getRecordDto, updateRecordDto, deleteRecordDto } from "../dtos/record.dtos.js";
+import { bodyToRecord, bodyToGetRecord, bodyToUpdateRecord, bodyToDeleteRecord } from "../dtos/record.dtos.js";
 import { createRecord, getRecord, updateRecord, deleteRecord } from "../services/record.service.js";
 
 export const handleCreateRecord = async (req, res, next) => {
@@ -51,11 +51,20 @@ export const handleCreateRecord = async (req, res, next) => {
             resultType: "SUCCESS",
             error: "null",
             success: {
-                id: 1,
+                RecordId: 1,
                 title: "번지점프 예약해놓고 취소했다.",
                 content: "버킷리스트 중 하나여서 번지점프 예약...",
                 occurDate: "2025-12-01T00:00:00.000Z",
-                categories: ["기대", "회피"]
+                categories: [
+                    {
+                        "categoryId": 3,
+                        "categoryName": "기대"
+                    },
+                    {
+                        "categoryId": 4,
+                        "categoryName": "회피"
+                    }
+                ]
             }
         }
     }
@@ -113,7 +122,7 @@ export const handleCreateRecord = async (req, res, next) => {
     
     try{
         const userId = req.params.userId;
-        const result = await createRecord(createRecordDto({userId, body: req.body}))
+        const result = await createRecord(bodyToRecord({userId, body: req.body}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -122,13 +131,15 @@ export const handleCreateRecord = async (req, res, next) => {
 
 export const handleGetRecord = async (req, res, next) => {
     /*
+    #swagger.auto = false
     #swagger.tags = ['Record']
     #swagger.summary = '한 줄 기록 조회 API'
     #swagger.description = '특정 유저의 연도와 월에 해당하는 한 줄 기록을 가져옵니다.'
     #swagger.parameters['userId'] = { in: 'path', description: '유저 ID', type: 'integer' }
     #swagger.parameters['year'] = { in: 'query', required: true, description: '조회할 연도', type: 'integer' }
     #swagger.parameters['month'] = { in: 'query', required: true, description: '조회할 월', type: 'integer' }
-    
+    #swagger.parameters['categoryId'] = { in: 'query', description: '필터링할 카테고리 ID', type: 'integer' }
+
     #swagger.responses[200] = {
         description: "조회 성공 응답",
         schema: {
@@ -136,11 +147,20 @@ export const handleGetRecord = async (req, res, next) => {
             error: "null",
             success: [
                 {
-                    id: 2,
+                    RecordId: 2,
                     title: "싸웠던 친구에게 다가가 화해를 하지 못했다.",
                     content: "사실 별거 아닌 거 그냥 먼저 얘기...",
                     occurDate: "2025-12-01T00:00:00.000Z",
-                    categories: ["두려움", "회피"]
+                    categories: [
+                        {
+                            "categoryId": 3,
+                            "categoryName": "기대"
+                        },
+                        {
+                            "categoryId": 4,
+                            "categoryName": "회피"
+                        }
+                    ]
                 }
             ]
         }
@@ -174,7 +194,7 @@ export const handleGetRecord = async (req, res, next) => {
     try{
         const userId = req.params.userId;
         const {year, month, categoryId} = req.query;
-        const result = await getRecord(getRecordDto({userId, categoryId, year, month}))
+        const result = await getRecord(bodyToGetRecord({userId, categoryId, year, month}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -231,11 +251,20 @@ export const handleUpdateRecord = async (req, res, next) => {
             resultType: "SUCCESS",
             error: "null",
             success: {
-                id: 1,
+                RecordId: 1,
                 title: "테스트 데이터",
                 content: "테스트 데이터",
                 occurDate: "2025-11-01T00:00:00.000Z",
-                categories: ["비교", "두려움"]
+                categories: [
+                    {
+                        "categoryId": 1,
+                        "categoryName": "기대"
+                    },
+                    {
+                        "categoryId": 2,
+                        "categoryName": "회피"
+                    }
+                ]
             }
         }
     }
@@ -293,7 +322,7 @@ export const handleUpdateRecord = async (req, res, next) => {
 
     try{
         const {userId, recordId} = req.params
-        const result = await updateRecord(updateRecordDto({userId, recordId, body: req.body}))
+        const result = await updateRecord(bodyToUpdateRecord({userId, recordId, body: req.body}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);
@@ -313,7 +342,9 @@ export const handleDeleteRecord = async (req, res, next) => {
         schema: {
             resultType: "SUCCESS",
             error: "null",
-            success: 1
+            success: {
+                recordId: 1
+            }
         }
     }
     #swagger.responses[404] = {
@@ -343,7 +374,7 @@ export const handleDeleteRecord = async (req, res, next) => {
 
     try{
         const {userId, recordId} = req.params
-        const result = await deleteRecord(deleteRecordDto({userId, recordId}))
+        const result = await deleteRecord(bodyToDeleteRecord({userId, recordId}))
         res.status(StatusCodes.OK).success(result);
     } catch(err) {
         next(err);

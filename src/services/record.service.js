@@ -6,6 +6,7 @@ import {
     deleteRecord as deleteRecordRepo,
     existingRecord } from '../repositories/record.repository.js'
 import { findUserById } from '../repositories/user.repository.js';
+import { responseFromRecord, responseFromDeletedRecord } from '../dtos/record.dtos.js';
 
 export const createRecord = async (data) => {
     const user = await findUserById(data.userId);
@@ -19,7 +20,7 @@ export const createRecord = async (data) => {
     
     try{
         const record = await createRecordRepo(data);
-        return record;
+        return responseFromRecord(record);
     } catch (error) {
         const err = new Error("기록 생성 중 서버 오류.");
         err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -42,7 +43,8 @@ export const getRecord = async (data) => {
 
     try{
         const records = await getRecordsRepo(data);
-        return records;
+        const result = records.map(record => responseFromRecord(record))
+        return result;
     } catch (error) {
         const err = new Error("기록 조회 중 서버 오류.");
         err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -63,7 +65,7 @@ export const updateRecord = async (data) => {
 
     try{
         const record = await updateRecordRepo(data);
-        return record;
+        return responseFromRecord(record);
     } catch(error) {
         const err = new Error("기록 수정 중 서버 오류.");
         err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -84,8 +86,7 @@ export const deleteRecord = async (data) => {
 
     try{
         const deletedRecordId = await deleteRecordRepo(data);
-        console.log(deletedRecordId);
-        return deletedRecordId
+        return responseFromDeletedRecord(deletedRecordId);
     } catch(error) {
         const err = new Error("기록 삭제 중 서버 오류.");
         err.StatusCodes = StatusCodes.INTERNAL_SERVER_ERROR;
