@@ -38,17 +38,32 @@ export const createRecordDto = (data) => {
 }
 
 export const getRecordDto = (data) => {
-    if(!data.userId) {
+    const errors = [];
+    console.log(data);
+    const requireFields = ["userId", "year", "month"]; 
+
+    for(const field of requireFields){
+        if(!data[field]) errors.push(({field: field, reason: "필드가 누락되었습니다."}));
+    }
+
+    if(Number(data.month) < 1 || Number(data.month) > 12) {
+        errors.push({field: "month", reason: "월은 1-12 사이의 값이어야 합니다."})
+    }
+
+    if(errors.length > 0) {
         const err = new Error("입력값이 유효하지 않습니다.");
         err.statusCode = StatusCodes.BAD_REQUEST;
         err.errorCode = "C001";
-        err.data = {field: "userId", reason: "userId 형식이 올바르지 않습니다"};
+        err.data = errors;
         throw err;
     }
 
+    const paddedMonth = String(data.month).padStart(2, '0');
+
     return {
         userId: Number(data.userId),
-        categoryId: Number(data.categoryId)
+        categoryId: Number(data.categoryId),
+        occurDate: new Date(`${data.year}-${paddedMonth}`)
     }
 }
 
