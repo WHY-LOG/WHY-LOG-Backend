@@ -124,3 +124,37 @@ export const updateReport = async (data) => {
   });
   return report;
 }
+
+export const getReports = async (data) => {
+  const report = await prisma.report.findMany({
+    where: {
+      userId: data.userId
+    },
+    include: {
+      reportCategories: {
+        include: {
+          categories: true
+        }
+      }
+    }
+  })
+  return report;
+}
+
+export const deleteReport = async (data) => {
+    const deleteReportCategory = prisma.reportCategories.deleteMany({
+        where: {
+            reportId: data.reportId
+        }
+    });
+
+    const deleteReport = prisma.report.delete({
+        where: {
+            id: data.reportId
+        }
+    });
+
+    await prisma.$transaction([deleteReportCategory, deleteReport]);
+
+    return data.reportId
+}
