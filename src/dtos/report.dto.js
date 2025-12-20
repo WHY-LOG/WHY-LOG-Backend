@@ -13,6 +13,19 @@ export const bodyToUpdateReport = (body) => {
     };
 }
 
+export const bodyToGetReport = (body) => {
+    return {
+        userId: body.userId,
+    };
+}
+
+export const bodyToDeleteReport = (body) => {
+    return {
+        userId: body.userId,
+        reportId: body.reportId
+    };
+}
+
 export const responseFromReport = (body) => {
     return {
         reportId: body.id,

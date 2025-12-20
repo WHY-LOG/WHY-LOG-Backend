@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { swaggerSetup } from "./config/swagger.config.js";
 import { handleCreateRecord, handleGetRecord, handleUpdateRecord, handleDeleteRecord } from "./controllers/record.controller.js";
-import { handleCreateReport, handleUpdateReport } from "./controllers/report.controller.js";
+import { handleCreateReport, handleGetReport, handleUpdateReport, handleDeleteReport } from "./controllers/report.controller.js";
 import { handleCreateUser, handleDeleteUser, handleGetUser, handleUpdateUser } from "./controllers/user.controller.js";
 
 
@@ -49,7 +49,9 @@ app.delete("/api/user/:userId", handleDeleteUser);
 
 // Report
 app.post("/api/user/:userId/reports", handleCreateReport);
+app.get("/api/users/:userId/reports", handleGetReport);
 app.put("/api/users/:userId/reports/:reportId", handleUpdateReport);
+app.delete("/api/users/:userId/reports/:reportId", handleDeleteReport);
 
 // Record
 app.post("/api/users/:userId/records", handleCreateRecord)

@@ -4,7 +4,9 @@ import {
     existingReport, 
     findMostUsedCategoriesByUserIdAndYear, 
     findRecordContentsByUserIdAndYear, 
-    updateReport as updateReportRepo 
+    updateReport as updateReportRepo ,
+    getReports as getReportsRepo,
+    deleteReport as deleteReportRepo
 } from "../repositories/report.repository.js"
 import { generateAIResponse } from "./gemini.service.js";
 import { createReportPrompts } from "../utils/prompts.js";
@@ -104,6 +106,59 @@ export const updateReport = async (data) => {
         };
     } catch(error) {
         const err = new Error("레포트 수정중 오류.");
+        err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+        err.errorCode = "R999";
+        err.data = data;
+        throw err;
+    }
+}
+
+export const getReports = async (data) => {
+    try {
+        const reports = await getReportsRepo(data);
+
+        if (reports.length === 0) {
+            const err = new Error("레포트가 존재하지 않습니다.");
+            err.statusCode = StatusCodes.NOT_FOUND;
+            err.errorCode = "R004";
+            err.data = data;
+            throw err;
+        }
+    // 각 리포트마다 graphData 구조 변환
+        const result = reports.map(report => ({
+            ...report,
+            graphData: report.reportCategories.map(item => ({
+                categoryId: item.categoryId,
+                categoryName: item.categories.categoryName,
+                percent: item.percent
+            }))
+        }));
+        return result;
+    } catch(error) {
+        const err = new Error("레포트 조회중 오류.");
+        err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
+        err.errorCode = "R999";
+        err.data = data;
+        throw err;
+    }
+}
+
+export const deleteReport = async (data) => {
+    const isExist = await existingReport(data);
+    if(!isExist) {
+        const err = new Error("레포트가 존재하지 않습니다.");
+        err.statusCode = StatusCodes.NOT_FOUND;
+        err.errorCode = "R004";
+        err.data = data;
+        throw err;
+    }
+
+    try {
+        const deletedReportId = await deleteReportRepo(data);
+        console.log(deletedReportId);
+        return deletedReportId
+    } catch(error) {
+        const err = new Error("레포트 삭제중 오류.");
         err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
         err.errorCode = "R999";
         err.data = data;
