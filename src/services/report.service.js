@@ -135,6 +135,9 @@ export const getReports = async (data) => {
         }));
         return result;
     } catch(error) {
+        if (error.errorCode) {
+            throw error;
+        }
         const err = new Error("레포트 조회중 오류.");
         err.statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
         err.errorCode = "R999";
