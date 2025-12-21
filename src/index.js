@@ -48,7 +48,7 @@ app.put("/api/user/:userId", handleUpdateUser);
 app.delete("/api/user/:userId", handleDeleteUser);
 
 // Report
-app.post("/api/user/:userId/reports", handleCreateReport);
+app.post("/api/users/:userId/reports", handleCreateReport);
 app.get("/api/users/:userId/reports", handleGetReport);
 app.put("/api/users/:userId/reports/:reportId", handleUpdateReport);
 app.delete("/api/users/:userId/reports/:reportId", handleDeleteReport);
