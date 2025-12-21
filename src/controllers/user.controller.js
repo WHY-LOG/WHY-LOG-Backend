@@ -45,19 +45,13 @@ export const handleCreateUser = async (req, res, next) => {
               success: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "유저 등록 성공" },
-                  data: {
-                    type: "object",
-                    properties: {
-                      userId: { type: "number", example: 1 },
-                      name: { type: "string", example: "홍길동" },
-                      email: { type: "string", example: "test@example.com" },
-                      imgUrl: {
-                        type: "string",
-                        nullable: true,
-                        example: "https://example.com/profile.jpg"
-                      }
-                    }
+                  userId: { type: "number", example: 1 },
+                  name: { type: "string", example: "홍길동" },
+                  email: { type: "string", example: "test@example.com" },
+                  imgUrl: {
+                    type: "string",
+                    nullable: true,
+                    example: "https://example.com/profile.jpg"
                   }
                 }
               }
@@ -144,7 +138,7 @@ export const handleGetUser = async (req, res, next) => {
     };
 
     #swagger.responses[200] = {
-      description: '유저 조회 성공',
+      description: "유저 조회 성공",
       content: {
         "application/json": {
           schema: {
@@ -155,19 +149,13 @@ export const handleGetUser = async (req, res, next) => {
               success: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "유저 조회 성공" },
-                  data: {
-                    type: "object",
-                    properties: {
-                      userId: { type: "number", example: 1 },
-                      name: { type: "string", example: "홍길동" },
-                      email: { type: "string", example: "test@example.com" },
-                      imgUrl: {
-                        type: "string",
-                        nullable: true,
-                        example: "https://example.com/profile.jpg"
-                      }
-                    }
+                  userId: { type: "number", example: 1 },
+                  name: { type: "string", example: "홍길동" },
+                  email: { type: "string", example: "test@example.com" },
+                  imgUrl: {
+                    type: "string",
+                    nullable: true,
+                    example: "https://example.com/profile.jpg"
                   }
                 }
               }
@@ -266,33 +254,27 @@ export const handleUpdateUser = async (req, res, next) => {
       }
     };
 
-    #swagger.responses[400] = {
-      description: "잘못된 요청 (userId 누락 / 변경된 정보 없음)",
+    #swagger.responses[200] = {
+      description: "유저 정보 수정 성공",
       content: {
         "application/json": {
-          examples: {
-            missingUserId: {
-              summary: "userId 누락",
-              value: {
-                resultType: "FAIL",
-                error: {
-                  errorCode: "U006",
-                  reason: "userId가 누락되었습니다.",
-                  data: null
-                },
-                success: null
-              }
-            },
-            noChange: {
-              summary: "변경된 정보 없음",
-              value: {
-                resultType: "FAIL",
-                error: {
-                  errorCode: "U009",
-                  reason: "변경된 정보가 없습니다.",
-                  data: null
-                },
-                success: null
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: {
+                  userId: { type: "number", example: 1 },
+                  name: { type: "string", example: "홍길동" },
+                  email: { type: "string", example: "test@example.com" },
+                  imgUrl: {
+                    type: "string",
+                    nullable: true,
+                    example: "https://example.com/profile.jpg"
+                  }
+                }
               }
             }
           }
