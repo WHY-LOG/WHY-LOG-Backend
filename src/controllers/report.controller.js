@@ -207,12 +207,10 @@ export const handleDeleteReport = async (req, res, next) => {
     #swagger.responses[200] = {
         description: '리포트 삭제 성공',
         schema: {
-            {
-                "resultType": "SUCCESS",
-                "error": null,
-                "success": {
-                    "reportId": 3
-                }
+            "resultType": "SUCCESS",
+            "error": null,
+            "success": {
+                "reportId": 3
             }
         }
     }
